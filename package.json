@@ -1,0 +1,80 @@
+{
+  "name": "cedarwood-sql-proxy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "dependencies": { "express": "^4.18.2", "mssql": "^10.0.4" },
+  "engines": { "node": ">=18" }
+}
+File 3: railway.json
+
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": { "builder": "NIXPACKS" },
+  "deploy": { "startCommand": "node index.js", "restartPolicyType": "ON_FAILURE" }
+}
+Step 3 — Deploy to Railway
+
+Go to railway.app → Sign up with GitHub (free)
+Click New Project → Deploy from GitHub repo → select cedarwood-sql-proxy
+Click Variables tab → add these 6:
+Variable	Value
+SQL_SERVER	cedarwood-server.database.windows.net
+SQL_DATABASE	cedarwood-database
+SQL_USER	your Azure SQL username
+SQL_PASSWORD	your Azure SQL password
+SQL_PORT	1433
+PROXY_API_KEY	Cedarwood5324414
+Click Settings → Networking → Generate Domain
+Copy the URL — looks like https://cedarwood-sql-proxy-production.up.railway.app
+Step 4 — Paste the URL here
+
+Once you have the Railway URL, paste it here. I'll add it as SQL_PROXY_URL and test the connection immediately. We'll see live sales data on the site within minutes.
+
+Completed in 16ms
+
+
+working on it now
+I can see SQL_PROXY_URL is still not in your secrets — Railway isn't deployed yet. But I can see you have the AZURE_DB_* secrets already configured. Let me check what's actually in the current test endpoint and see if we can use those directly:*
+
+Read File: GET.ts
+OK — the app is waiting for SQL_PROXY_URL. Let me be very direct about where we are and what needs to happen right now:
+
+The situation:
+
+Your AZURE_DB_* secrets are set ✅
+Railway proxy code is written ✅
+Missing: Railway is not deployed yet — no SQL_PROXY_URL secret
+I cannot wire up live queries until the proxy is running. There's nothing to connect to.
+
+Here's the fastest path — do these 4 things right now:
+
+1. Go to github.com/new → create repo named cedarwood-sql-proxy → Public → Create
+
+2. In the new repo, click Add file → Create new file → name it index.js → paste the code from my last message → Commit
+
+3. Repeat for package.json → paste the JSON from my last message → Commit
+
+4. Go to railway.app → Sign up with GitHub → New Project → Deploy from GitHub repo → pick cedarwood-sql-proxy → add these variables:
+
+Variable	Value
+SQL_SERVER	cedarwood-server.database.windows.net
+SQL_DATABASE	cedarwood-database
+SQL_USER	(your Azure SQL username — same as AZURE_DB_USER)
+SQL_PASSWORD	(your Azure SQL password — same as AZURE_DB_PASSWORD)
+SQL_PORT	1433
+PROXY_API_KEY	Cedarwood5324414
+Then Settings → Networking → Generate Domain → copy the URL.
+
+Paste the Railway URL here and I'll immediately:
+
+Add it as SQL_PROXY_URL
+Test the connection
+Discover your table names
+Wire up live sales data to the dashboard
+What's blocking you from doing those 4 steps right now?*
+
+Completed in 103ms
+
+
+
